@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-card: var(--card-bg);
+  --color-card-foreground: var(--card-fg);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-fg);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-fg);
+  --color-border: var(--border);
+  --color-ring: var(--primary);
+  
+  --color-terminal-cyan: var(--terminal-cyan);
+  --color-terminal-red: var(--terminal-red);
+  --color-terminal-yellow: var(--terminal-yellow);
+}
+
+:root {
+  --bg: hsl(120, 25%, 3%);
+  --fg: hsl(120, 80%, 70%);
+  --card-bg: hsl(120, 20%, 5%);
+  --card-fg: hsl(120, 75%, 80%);
+  --primary: hsl(120, 85%, 45%);
+  --primary-fg: hsl(120, 25%, 3%);
+  --secondary: hsl(120, 15%, 8%);
+  --secondary-fg: hsl(120, 60%, 65%);
+  --muted: hsl(120, 10%, 10%);
+  --muted-fg: hsl(120, 30%, 40%);
+  --accent: hsl(45, 93%, 58%);
+  --accent-fg: hsl(0, 0%, 4%);
+  --border: hsl(120, 30%, 14%);
+  
+  --terminal-cyan: hsl(180, 85%, 50%);
+  --terminal-red: hsl(0, 75%, 55%);
+  --terminal-yellow: hsl(45, 93%, 58%);
+}
+
+.theme-green {
+  --bg: hsl(120, 25%, 3%);
+  --fg: hsl(120, 80%, 70%);
+  --card-bg: hsl(120, 20%, 5%);
+  --card-fg: hsl(120, 75%, 80%);
+  --primary: hsl(120, 85%, 45%);
+  --primary-fg: hsl(120, 25%, 3%);
+  --secondary: hsl(120, 15%, 8%);
+  --secondary-fg: hsl(120, 60%, 65%);
+  --muted: hsl(120, 10%, 10%);
+  --muted-fg: hsl(120, 30%, 40%);
+  --accent: hsl(45, 93%, 58%);
+  --accent-fg: hsl(0, 0%, 4%);
+  --border: hsl(120, 30%, 14%);
+}
+
+.theme-amber {
+  --bg: hsl(20, 25%, 3%);
+  --fg: hsl(35, 85%, 60%);
+  --card-bg: hsl(20, 20%, 5%);
+  --card-fg: hsl(35, 85%, 75%);
+  --primary: hsl(35, 90%, 50%);
+  --primary-fg: hsl(20, 25%, 3%);
+  --secondary: hsl(20, 15%, 8%);
+  --secondary-fg: hsl(35, 70%, 55%);
+  --muted: hsl(20, 10%, 10%);
+  --muted-fg: hsl(35, 30%, 35%);
+  --accent: hsl(120, 80%, 50%);
+  --accent-fg: hsl(120, 25%, 3%);
+  --border: hsl(35, 30%, 14%);
+}
+
+.theme-cyan {
+  --bg: hsl(190, 25%, 3%);
+  --fg: hsl(180, 85%, 65%);
+  --card-bg: hsl(190, 20%, 5%);
+  --card-fg: hsl(180, 85%, 80%);
+  --primary: hsl(180, 90%, 45%);
+  --primary-fg: hsl(190, 25%, 3%);
+  --secondary: hsl(190, 15%, 8%);
+  --secondary-fg: hsl(180, 70%, 58%);
+  --muted: hsl(190, 10%, 10%);
+  --muted-fg: hsl(180, 30%, 40%);
+  --accent: hsl(35, 90%, 55%);
+  --accent-fg: hsl(0, 0%, 4%);
+  --border: hsl(180, 30%, 14%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+    font-feature-settings: "liga" 0;
+  }
+
+  ::selection {
+    @apply bg-primary/30 text-foreground;
+  }
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.crt-flicker-animation {
+  animation: crt-flicker 0.15s infinite;
+}
+
+.crt-text-glow {
+  text-shadow: 0 0 3px var(--fg);
+}
+
+.crt-box-glow {
+  box-shadow: 0 0 8px var(--border);
+}
+
+.scanlines::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+}
+
