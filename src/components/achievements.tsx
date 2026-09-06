@@ -1,119 +1,106 @@
 import { motion } from "framer-motion"
-
-import { SectionHeader } from "@/components/terminal-window"
-import { TerminalWindow } from "@/components/terminal-window"
 import { achievements, certifications } from "@/data/portfolio"
 
 export function Achievements() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut" as const,
+      },
+    },
+  }
+
   return (
-    <section id="achievements" className="px-4 py-20 border-b border-border bg-background">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          label="// pytest & verification"
-          title="Wins & Certifications Spec"
-          description="Validation test suites confirming achievements, hackathons, and certifications."
-        />
+    <section id="achievements" className="px-4 py-20 md:py-32 bg-secondary/30">
+      <div className="max-w-6xl mx-auto">
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <p className="text-sm font-mono text-primary mb-2">Recognition</p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            Achievements & Certifications
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Competitions, awards, and professional certifications recognizing expertise.
+          </p>
+        </motion.div>
 
-        <div className="grid gap-6 lg:grid-cols-2 items-stretch mt-8">
-          
-          {/* Left Panel: Pytest Runner (Achievements) */}
+        {/* Two column layout */}
+        <div className="grid md:grid-cols-2 gap-12">
+          {/* Achievements */}
           <div>
-            <TerminalWindow title="pytest -v achievements_spec.py" className="h-full flex flex-col justify-between">
-              <div className="font-mono text-xs leading-relaxed space-y-4">
-                
-                {/* Pytest Header */}
-                <div className="text-muted-foreground/60 border-b border-border/40 pb-2">
-                  <p>============================= test session starts =============================</p>
-                  <p>platform linux -- Python 3.10.12, pytest-7.4.3, pluggy-1.3.0</p>
-                  <p>rootdir: /home/aayushmaan/achievements</p>
-                  <p>collected {achievements.length} items</p>
-                </div>
-
-                {/* Test Suite Items */}
-                <div className="space-y-3">
-                  {achievements.map((item, idx) => {
-                    const testName = item.title
-                      .toLowerCase()
-                      .replace(/[^a-z0-9]/g, "_")
-                      .replace(/_+/g, "_")
-
-                    return (
-                      <motion.div
-                        key={item.title}
-                        initial={{ opacity: 0, x: -5 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: idx * 0.05 }}
-                        className="border-l border-primary/20 pl-2 py-0.5"
-                      >
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="text-muted-foreground font-mono">
-                            tests/test_wins.py::<span className="text-foreground">test_{testName}</span>
-                          </span>
-                          <span className="text-primary font-bold bg-primary/10 border border-primary/20 px-1 rounded-sm text-[10px]">
-                            PASSED
-                          </span>
-                        </div>
-                        <div className="pl-4 mt-1 text-[10px] text-muted-foreground">
-                          <span className="text-terminal-yellow font-semibold">{item.icon}</span> {item.title} — {item.subtitle}
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Pytest Summary Footer */}
-              <div className="mt-8 pt-2 border-t border-border/40 font-mono text-xs text-primary font-bold text-center">
-                ========================= {achievements.length} passed in 0.42s =========================
-              </div>
-            </TerminalWindow>
+            <h3 className="text-xl font-display font-bold mb-6">Awards & Recognition</h3>
+            <motion.div
+              className="space-y-4"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              {achievements.map((achievement, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={itemVariants}
+                  className="p-4 rounded-lg border border-border bg-card hover:bg-secondary/50 transition-smooth"
+                >
+                  <div className="flex gap-3 items-start">
+                    <span className="text-2xl md:text-3xl flex-shrink-0">{achievement.icon}</span>
+                    <div>
+                      <h4 className="font-display font-bold text-foreground mb-1">
+                        {achievement.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {achievement.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
 
-          {/* Right Panel: Certifications check */}
+          {/* Certifications */}
           <div>
-            <TerminalWindow title="bash ./verify_certs.sh" className="h-full flex flex-col justify-between">
-              <div className="font-mono text-xs leading-relaxed space-y-4">
-                
-                {/* Script Header */}
-                <div className="text-muted-foreground/60 border-b border-border/40 pb-2">
-                  <p>$ ./verify_certs.sh --verbose</p>
-                  <p>Initializing SHA256 checksum verifications for credentials...</p>
-                  <p>Verifying signatures via external public key keyservers...</p>
-                </div>
-
-                {/* Cert Listings */}
-                <div className="space-y-2.5">
-                  {certifications.map((cert, idx) => (
-                    <motion.div
-                      key={cert.name}
-                      initial={{ opacity: 0, x: 5 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: idx * 0.04 }}
-                      className="flex items-start justify-between gap-4 border border-border/60 bg-secondary/10 px-3 py-1.5 hover:border-primary/30 transition-colors"
-                    >
-                      <div>
-                        <p className="text-foreground font-semibold text-xs">{cert.name}</p>
-                        <p className="text-[10px] text-muted-foreground">{cert.issuer}</p>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-                        <span className="text-primary font-mono text-[10px] font-bold">OK</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Validation Result Footer */}
-              <div className="mt-8 pt-2 border-t border-border/40 font-mono text-xs text-primary font-bold flex justify-between">
-                <span>Verification status: SUCCESS</span>
-                <span>Exit code: 0</span>
-              </div>
-            </TerminalWindow>
+            <h3 className="text-xl font-display font-bold mb-6">Certifications</h3>
+            <motion.div
+              className="space-y-3"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              {certifications.map((cert, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={itemVariants}
+                  className="p-3 rounded-lg border border-border/50 bg-card/50 hover:bg-secondary/30 transition-smooth"
+                >
+                  <h4 className="font-medium text-foreground text-sm">{cert.name}</h4>
+                  <p className="text-xs text-muted-foreground mt-1">{cert.issuer}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
-
         </div>
       </div>
     </section>

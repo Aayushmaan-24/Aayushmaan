@@ -1,26 +1,15 @@
 import { useEffect, useState } from "react"
+import { Menu, X } from "lucide-react"
 import { navLinks, site } from "@/data/portfolio"
 import { cn } from "@/lib/utils"
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState("hero")
-  const [time, setTime] = useState("17:54")
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date()
-      const hrs = String(now.getHours()).padStart(2, "0")
-      const mins = String(now.getMinutes()).padStart(2, "0")
-      setTime(`${hrs}:${mins}`)
-    }
-    updateTime()
-    const timer = setInterval(updateTime, 60000)
-    return () => clearInterval(timer)
-  }, [])
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 250
+      const scrollPosition = window.scrollY + 100
       const sections = ["hero", ...navLinks.map((l) => l.href.replace("#", ""))]
 
       for (const section of sections) {
@@ -42,30 +31,16 @@ export function Navbar() {
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 bg-secondary border-b border-border text-foreground font-mono text-xs select-none">
-      <div className="flex h-8 items-center justify-between px-3 md:px-4">
-        {/* Left Block: Tmux session tag */}
-        <div className="flex items-center gap-1.5">
-          <span className="bg-primary text-primary-foreground px-1.5 py-0.5 font-bold uppercase">
-            [TUI: {site.handle}]
-          </span>
-          <span className="text-muted-foreground hidden sm:inline">status: online</span>
-        </div>
+    <header className="fixed inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+      <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        {/* Logo / Name */}
+        <a href="#hero" className="font-display font-bold text-lg md:text-xl hover:text-primary transition-smooth">
+          {site.handle}
+        </a>
 
-        {/* Middle Block: Tmux Window list */}
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-none">
-          <a
-            href="#hero"
-            className={cn(
-              "px-1 py-0.5 transition-colors hover:text-foreground",
-              activeSection === "hero"
-                ? "text-primary font-bold border-b-2 border-primary"
-                : "text-muted-foreground"
-            )}
-          >
-            0:home{activeSection === "hero" ? "*" : ""}
-          </a>
-          {navLinks.map((link, idx) => {
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-1">
+          {navLinks.map((link) => {
             const id = link.href.replace("#", "")
             const isActive = activeSection === id
             return (
@@ -73,27 +48,54 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "px-1 py-0.5 transition-colors hover:text-foreground whitespace-nowrap",
+                  "px-4 py-2 rounded-lg text-sm font-medium transition-smooth capitalize",
                   isActive
-                    ? "text-primary font-bold border-b-2 border-primary"
-                    : "text-muted-foreground"
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {idx + 1}:{link.label}
-                {isActive ? "*" : ""}
+                {link.label}
               </a>
             )
           })}
         </div>
 
-        {/* Right Block: Hostname & DateTime */}
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <span className="hidden md:inline">@aayushmaan</span>
-          <span className="bg-muted px-1.5 py-0.5 text-foreground flex items-center gap-1 border border-border/50">
-            {time}
-          </span>
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2 hover:bg-secondary rounded-lg transition-smooth"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </nav>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden absolute top-16 inset-x-0 bg-background border-b border-border/50 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-2">
+            {navLinks.map((link) => {
+              const id = link.href.replace("#", "")
+              const isActive = activeSection === id
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-smooth capitalize",
+                    isActive
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {link.label}
+                </a>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </header>
   )
 }
